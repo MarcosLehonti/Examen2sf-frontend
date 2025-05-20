@@ -1,0 +1,26 @@
+.logs-container {
+    padding: 40px 20px 20px 20px;   /* Espacio arriba para separarlo del navbar */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.logs-container h2 {
+    margin-bottom: 20px;
+}
+
+/* Ajustamos el ancho */
+.logs-textarea {
+    width: 90vw;               /* 90% del ancho de la ventana */
+    height: 80vh;              /* 80% del alto de la ventana */
+    padding: 20px;
+    font-family: monospace;
+    font-size: 14px;
+    background: #1e1e1e;
+    color: #00ff00;
+    border: 1px solid #333;
+    border-radius: 8px;
+    resize: none;
+    overflow: auto;
+}

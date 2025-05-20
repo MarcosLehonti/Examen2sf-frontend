@@ -1,0 +1,46 @@
+.generate-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #ffffff;
+  }
+  
+  .generate-card {
+    background: #fff;
+    padding: 50px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 600px;
+  }
+  
+  .generate-image {
+    width: 150px;
+    margin-bottom: 30px;
+  }
+  
+  .generate-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #000000;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .generate-button:hover {
+    background-color: #6025e9;
+  }
+  
+  .generate-card h2 {
+    font-size: 24px;
+  }
+  
+  .generate-card p {
+    font-size: 18px;
+  }
+  

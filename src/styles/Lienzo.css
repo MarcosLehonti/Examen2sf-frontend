@@ -1,0 +1,150 @@
+.contenedor-principal {
+  display: flex;
+  height: calc(100vh - 64px);
+  margin-top: 64px;
+  font-family: sans-serif;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 260px;
+  background: #f8f8f8;
+  padding: 20px;
+  border-right: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+}
+
+.sidebar-title {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.sidebar-button {
+  padding: 10px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.sidebar-button:hover {
+  background-color: #6025e9;  /* Cambia a un gris más claro al hacer hover */
+}
+
+/* Lienzo */
+.lienzo-contenedor {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #eaeaea;
+}
+
+.lienzo {
+  width: 1280px;
+  height: 720px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  position: relative;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.lienzo h2 {
+  padding: 10px;
+}
+
+/* Panel HTML */
+.panel-html {
+  width: 300px;
+  padding: 15px;
+  background-color: #fff;
+  border-left: 1px solid #ccc;
+  overflow-y: hidden;
+}
+
+.panel-html h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.textarea-html {
+  width: 90%;
+  height: 80%;
+  font-family: monospace;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  background-color: #f9f9f9;
+}
+
+/* Menú eliminar */
+.menu-eliminar,
+.menu-editar {
+  margin-top: 10px;
+}
+
+.menu-eliminar h3,
+.menu-editar h3 {
+  margin-bottom: 8px;
+}
+
+.menu-eliminar ul,
+.menu-editar ul {
+  list-style-type: none;
+  padding: 0;
+  font-size: 14px;
+}
+
+.menu-eliminar li,
+.menu-editar li {
+  margin-bottom: 6px;
+}
+
+.menu-eliminar button {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.menu-eliminar button:hover {
+  background-color: #d32f2f;
+}
+
+.menu-editar input {
+  margin-left: 10px;
+  padding: 4px;
+  width: 100px;
+}
+
+.menu-editar button {
+  margin-left: 6px;
+  padding: 4px 8px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.menu-editar button:hover {
+  background-color: #388e3c;
+}
+
+/* Resaltar elementos seleccionados */
+button.selected,
+label.selected {
+  border: 2px solid #2196F3;
+  box-shadow: 0 0 8px rgba(33, 150, 243, 0.7);
+}

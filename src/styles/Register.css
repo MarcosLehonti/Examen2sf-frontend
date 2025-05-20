@@ -1,0 +1,120 @@
+/* Aplica a todo el documento */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+  background-color: #f4f6f8;
+}
+
+/* Centrado total */
+.register-container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px; /* 🔹 evita desbordes en móviles */
+}
+
+/* Estilo del formulario */
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 40px;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 350px;
+  max-width: 90vw; /* 🔹 adapta el ancho en móviles */
+  text-align: center;
+}
+
+.register-form h2 {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.register-form input {
+  padding: 10px;
+  font-size: 18px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.register-form input:focus {
+  outline: none;
+  transform: scale(1.05);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  border-color: #000;
+}
+
+.register-form button {
+  padding: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.register-form button:hover {
+  background-color: #333;
+}
+
+.register-message {
+  margin-top: 10px;
+  color: green;
+  font-size: 16px;
+}
+
+/* 🔹 RESPONSIVE */
+@media (max-width: 768px) {
+  .register-form {
+    padding: 30px;
+  }
+
+  .register-form h2 {
+    font-size: 24px;
+  }
+
+  .register-form input {
+    font-size: 16px;
+    padding: 8px;
+  }
+
+  .register-form button {
+    font-size: 16px;
+    padding: 10px;
+  }
+
+  .register-message {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .register-form {
+    padding: 20px;
+  }
+
+  .register-form h2 {
+    font-size: 22px;
+  }
+
+  .register-form input,
+  .register-form button {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .register-message {
+    font-size: 13px;
+  }
+}

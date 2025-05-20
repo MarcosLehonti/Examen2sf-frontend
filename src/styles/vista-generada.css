@@ -1,0 +1,87 @@
+/* vista-generada.css */
+
+html, body {
+    height: 100%; /* Esto asegura que html y body ocupen toda la altura del viewport */
+    margin: 0;
+  }
+  
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Alinea los elementos desde la parte superior */
+    min-height: 100vh;
+    background-color: #ffffff;
+    font-family: Arial, sans-serif;
+  }
+  
+  .vista-container {
+    text-align: center;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 80px; /* Ajusta este margen según la altura del Navbar */
+  }
+  
+  .vista-titulo-central {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333333;
+  }
+  
+  .vista-imagen {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+    border: 2px solid #ffffff;
+    border-radius: 5px;
+  }
+  
+  .formulario-generado {
+    margin-bottom: 20px;
+  }
+  
+  .form-generado {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .form-item {
+    margin-bottom: 10px;
+    text-align: left;
+  }
+  
+  button {
+    padding: 10px;
+    font-size: 16px;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  button:hover {
+    background-color: #317e53;
+  }
+  
+  .codigo-generado textarea {
+    width: 90%; /* Reduce el ancho para que no esté pegado a los bordes */
+    height: 150px;
+    margin: 0 auto 10px; /* Centra el textarea horizontalmente y agrega margen inferior */
+    padding: 10px;
+    border: 1px solid #5f2f2f;
+    border-radius: 5px;
+    resize: none;
+    display: block; /* Asegura que el elemento se comporte como bloque para centrarse con margin auto */
+  }
+  
+  
+  .codigo-generado a button {
+    margin-top: 10px;
+  }
+  

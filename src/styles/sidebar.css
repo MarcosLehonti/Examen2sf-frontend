@@ -1,0 +1,26 @@
+/* Sidebar.css */
+
+.sidebar {
+    width: 220px;
+    background: #f8f8f8;
+    padding: 15px;
+    border-right: 1px solid #ccc;
+  }
+  
+  .sidebar h2 {
+    font-size: 30px;
+    margin-bottom: 15px;
+  }
+  
+  .sidebar-button {
+    padding: 10px 20px;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+  }
+  

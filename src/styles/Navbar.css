@@ -1,0 +1,139 @@
+.navbar {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #000;
+  z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-menu {
+  list-style: none;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 30px;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-menu li {
+  position: relative;
+}
+
+.navbar-menu a,
+.menu-item span {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 18px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.navbar-menu a:hover,
+.menu-item span:hover {
+  color: #00c0ff;
+}
+
+.logout-button {
+  background: none;
+  border: none;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  padding: 0;
+}
+
+.logout-button:hover {
+  color: #ff5f5f;
+}
+
+/* Submenús */
+.submenu {
+  background-color: #111;
+  border-radius: 5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  position: absolute;
+  top: 40px;
+  left: 0;
+  padding: 10px 0;
+  min-width: 200px;
+  z-index: 999;
+}
+
+.submenu li {
+  padding: 10px 20px;
+}
+
+.submenu li a {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+  display: block;
+  width: 100%;
+}
+
+.submenu li a:hover {
+  background-color: #222;
+  color: #00c0ff;
+}
+
+/* 🔹 RESPONSIVE */
+@media (max-width: 768px) {
+  .navbar-container {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px 20px;
+  }
+
+  .navbar-menu {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .navbar-menu a,
+  .menu-item span,
+  .logout-button {
+    font-size: 16px;
+  }
+
+  .submenu {
+    position: static;
+    width: 100%;
+    box-shadow: none;
+    border-radius: 0;
+    background-color: transparent;
+    padding: 0;
+  }
+
+  .submenu li {
+    padding: 8px 0;
+  }
+
+  .submenu li a {
+    font-size: 14px;
+    padding-left: 15px;
+    color: #ddd;
+  }
+
+  .submenu li a:hover {
+    background-color: #111;
+    color: #00c0ff;
+  }
+}

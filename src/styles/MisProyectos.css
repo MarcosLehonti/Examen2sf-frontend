@@ -1,0 +1,103 @@
+.misproyectos-container {
+  margin-top: 150px;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.svg-only-container {
+  margin-bottom: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.svg-only {
+  width: 500px;
+  height: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+/* Lista de proyectos */
+.projects-list {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  width: 100%;
+  max-width: 900px;
+}
+
+.project-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.project-name {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #222;
+  text-align: left;
+}
+
+.code-block {
+  background-color: #f7f7f7;
+  padding: 15px;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 14px;
+  white-space: pre-wrap;
+  width: 100%;
+}
+
+.loading-container {
+  padding: 40px;
+  font-size: 18px;
+  color: #555;
+  text-align: center;
+}
+
+/* 🔹 RESPONSIVE */
+@media (max-width: 768px) {
+  .svg-only {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .project-name {
+    font-size: 20px;
+    text-align: center;
+  }
+
+  .code-block {
+    font-size: 13px;
+    padding: 12px;
+  }
+
+  .loading-container {
+    font-size: 16px;
+    padding: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .svg-only {
+    max-width: 250px;
+  }
+
+  .project-name {
+    font-size: 18px;
+  }
+
+  .code-block {
+    font-size: 12px;
+    padding: 10px;
+  }
+
+  .loading-container {
+    font-size: 14px;
+    padding: 20px;
+  }
+}

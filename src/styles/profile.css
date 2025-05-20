@@ -1,0 +1,125 @@
+/* Contenedor principal centrado */
+.profile-container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px; /* 🔹 Evita desbordes en pantallas pequeñas */
+}
+
+/* Formulario general */
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 40px;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 350px;
+  max-width: 90vw; /* 🔹 Se adapta en móviles */
+  text-align: center;
+}
+
+.profile-form h2 {
+  margin-bottom: 10px;
+}
+
+.profile-form input {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.profile-form input:focus {
+  outline: none;
+  transform: scale(1.05);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  border-color: #000;
+}
+
+.profile-form button {
+  padding: 10px;
+  font-size: 16px;
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.profile-form button:hover {
+  background-color: #333;
+}
+
+.profile-message {
+  margin-top: 10px;
+  color: rgb(32, 100, 55);
+  font-size: 14px;
+}
+
+.profile-form label {
+  font-weight: bold;
+  margin-bottom: -5px;
+  text-align: left;
+  align-self: flex-start;
+  font-size: 15px;
+  margin-top: 10px;
+}
+
+/* 🔹 RESPONSIVE */
+@media (max-width: 768px) {
+  .profile-form {
+    padding: 30px;
+  }
+
+  .profile-form input {
+    font-size: 15px;
+    padding: 9px;
+  }
+
+  .profile-form button {
+    font-size: 15px;
+    padding: 9px;
+  }
+
+  .profile-form h2 {
+    font-size: 22px;
+  }
+
+  .profile-message {
+    font-size: 13px;
+  }
+
+  .profile-form label {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-form {
+    padding: 20px;
+  }
+
+  .profile-form input,
+  .profile-form button {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .profile-form h2 {
+    font-size: 20px;
+  }
+
+  .profile-message {
+    font-size: 12px;
+  }
+
+  .profile-form label {
+    font-size: 13px;
+  }
+}
