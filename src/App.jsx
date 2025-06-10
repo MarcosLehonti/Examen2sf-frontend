@@ -21,6 +21,7 @@ import StartProjectView from './components/StartProjectView';
 import CrearProyectoView from './components/Prompt';
 import GenerarFlutter from './components/GenerarFlutter';
 import GenerarFlutterBoceto from './components/GenerarFlutterBoceto';
+import Manual from './components/Manual';
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
         <Route path="/diagrams/createlienzo/:roomId" element={<ProtectedRoute><Prueba /></ProtectedRoute>} />
         <Route path="/diagrams/creatediagram" element={<ProtectedRoute><VisorDiagramas /></ProtectedRoute>} />
         <Route path="/diagrams/prompt" element={<CrearProyectoView />} />
+    
 
         <Route path="/generar-angular" element={<ProtectedRoute><GenerarAngular /></ProtectedRoute>} />
         <Route path="/users" element={<ProtectedRoute><ListaUsuarios /></ProtectedRoute>} />
@@ -47,6 +49,11 @@ function App() {
         <Route path="/guardar-proyecto" element={<ProtectedRoute><GuardarProyecto /></ProtectedRoute>} />
         <Route path="/diagrams/mis-proyectos" element={<ProtectedRoute><MisProyectos /></ProtectedRoute>} />
         <Route path="/diagrams/createimage" element={<ProtectedRoute><StartProjectView /></ProtectedRoute>} />
+
+
+        <Route path="/manual" element={<Manual/>}/>
+
+
 
       </Routes>
     </BrowserRouter>
