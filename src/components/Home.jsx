@@ -5,7 +5,7 @@ import '../styles/Home.css';
 import lienzoImg from '../assets/lienzo.svg';
 import SubirArc from '../assets/subirImg.svg';
 import SubirDoc from '../assets/subir_archivo.svg';
-import SubirPrompt from '../assets/Proyecto.svg';
+import SubirPrompt from '../assets/proyecto.svg';
 import { v4 as uuidv4 } from 'uuid';
 
 const Home = () => {
