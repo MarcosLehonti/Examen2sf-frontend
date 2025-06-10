@@ -42,6 +42,8 @@ const Navbar = () => {
               <ul className="submenu">
                 <li><Link to="/diagrams/creatediagram">Subir diagrama de clases</Link></li>
                 <li><Link to="/diagrams/createlienzo">Crear lienzo</Link></li>
+                <li><Link to="/diagrams/prompt">Prompt</Link></li>
+
                 <li><Link to="/diagrams/mis-proyectos">Ver mis proyectos</Link></li>
               </ul>
             )}
@@ -53,6 +55,7 @@ const Navbar = () => {
               <ul className="submenu">
                 <li><Link to="/profile">Usuario</Link></li>
                 <li><Link to="/profile/edit">Cambiar datos</Link></li>
+                <li><Link to="/diagrams/createimage">Subir imagen</Link></li>
                 <li><Link to="/profile/password">Cambiar contraseña</Link></li>
               </ul>
             )}

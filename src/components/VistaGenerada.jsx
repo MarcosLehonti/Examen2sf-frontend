@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import Navbar from "./Navbar";
@@ -8,6 +8,12 @@ const VistaGenerada = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { formFields, generatedCode, imagePreview } = location.state || {};
+
+  useEffect(() => {
+    if (generatedCode) {
+      localStorage.setItem("htmlGenerado", generatedCode);
+    }
+  }, [generatedCode]);
 
   const handleCompartirSala = () => {
     const roomId = uuidv4();
@@ -20,7 +26,7 @@ const VistaGenerada = () => {
 
   const handleDescargarYRedirigir = () => {
     localStorage.setItem("htmlGenerado", generatedCode);
-    navigate("/generar-angular");
+    navigate("/generar-flutter-boceto");
   };
 
   return (
@@ -142,6 +148,17 @@ const VistaGenerada = () => {
                         </tbody>
                       </table>
                     )}
+                    {field.type === "checkbox-list" && (
+                      <>
+                        <label>{field.label}</label>
+                        {field.options.map((option, i) => (
+                          <label key={i} style={{ display: "block" }}>
+                            <input type="checkbox" /> {option}
+                          </label>
+                        ))}
+                      </>
+                    )}
+
                   </div>
                 ))}
               </form>

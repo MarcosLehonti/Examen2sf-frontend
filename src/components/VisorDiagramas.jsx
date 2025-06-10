@@ -259,7 +259,7 @@ function VisorDiagramas() {
                           onClick={() => {
                             localStorage.setItem("htmlGenerado", codigoHTML);
                             alert(`✅ Código de la clase "${clase.name}" guardado en LocalStorage`);
-                            navigate('/generar-angular');   // Redirección automática
+                            navigate('/generar-');   // Redirección automática
                           }}
                           style={{ padding: "6px 12px", backgroundColor: "#4CAF50", color: "white", border: "none", borderRadius: "4px", cursor: "pointer" }}
                         >

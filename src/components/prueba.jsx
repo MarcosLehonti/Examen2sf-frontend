@@ -24,8 +24,8 @@ export default function CreateLienzo() {
     const newButton = {
       id: elements.length + 1,
       type: "button",
-      x: 600,
-      y: 350,
+      x: 100,
+      y: 100,
       text: "Botón",
       color: "#007bff",
     };
@@ -36,8 +36,8 @@ export default function CreateLienzo() {
     const newLabel = {
       id: elements.length + 1,
       type: "label",
-      x: 600,
-      y: 400,
+      x: 100,
+      y: 100,
       text: "Etiqueta",
       fontSize: 14,
       width: 100,
@@ -50,8 +50,8 @@ export default function CreateLienzo() {
     const newInput = {
       id: elements.length + 1,
       type: "input",
-      x: 600,
-      y: 450,
+      x: 100,
+      y: 100,
       text: "Ingrese Texto",
     };
     syncElements([...elements, newInput]);
@@ -61,15 +61,47 @@ export default function CreateLienzo() {
     const newCard = {
       id: elements.length + 1,
       type: "card",
-      x: 400,
+      x: 10,
       y: 100,
-      width: 500,
-      height: 550,
+      width: 350,
+      height: 275,
       backgroundColor: "#90bdc6",
       text: ""
     };
     syncElements([...elements, newCard]);
   };
+
+  //creacion checkboxlist
+  const handleCreateCheckboxList = () => {
+    const newCheckboxList = {
+      id: elements.length + 1,     
+      type: "checkbox-list",
+      x: 100,
+      y: 100,
+      items: ["Opción 1", "Opción 2", "Opción 3"]
+    };
+    syncElements([...elements, newCheckboxList]);
+  };
+
+  //creacion de tabla
+  const handleCreateTable =() =>{
+    const newTable ={
+      id: elements.length + 1,
+      type: "table",
+      x:0,
+      y:100,
+      headers: ["Nombre", "Email", "Acciones"],
+      rows: [
+        ["Juan", "juan@mail.com", "Editar"],
+        ["Ana", "ana@mail.com", "Editar"],
+        ["Luis", "luis@mail.com", "Editar"]
+      ]
+
+    };
+    syncElements([...elements, newTable]);
+  };
+
+
 
   // Movimiento
   const handleMouseDown = (id) => (e) => {
@@ -196,7 +228,7 @@ export default function CreateLienzo() {
 
   // 🔹 MODIFICADO: Conexión socket estable
   useEffect(() => {
-    socketRef.current = io('https://localhost:4000');
+    socketRef.current = io('http://localhost:4000');
 
     if (roomId) {
       socketRef.current.emit('join-room', roomId);
@@ -238,7 +270,30 @@ export default function CreateLienzo() {
         return `<input style="position:absolute; left:${el.x}px; top:${el.y}px; padding:4px;" placeholder="${el.text}" />`;
       } else if (el.type === "card") {
         return `<div style="position:absolute; left:${el.x}px; top:${el.y}px; width:${el.width}px; height:${el.height}px; background-color:${el.backgroundColor}; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); display:flex; align-items:center; justify-content:center;">${el.text}</div>`;
+      }else if (el.type === "checkbox-list") {
+      return `<div style="position:absolute; left:${el.x}px; top:${el.y}px; padding:10px; background-color:#f9f9f9; border:1px solid #ccc; border-radius:6px;">${
+          el.items
+            .map(
+              (item) =>
+                `<label style="display:block; margin-bottom:4px;"><input type="checkbox" /> ${item}</label>`
+            )
+            .join("")
+        }</div>`;
+      }else if (el.type === "table") {
+        return `<table style="position:absolute; left:${el.x}px; top:${el.y}px; width:100%; border-collapse:collapse; font-size:14px;">
+          <thead>
+            <tr>
+              ${el.headers.map(header => `<th style="border:1px solid #ccc; padding:8px; background-color:#f5f5f5;">${header}</th>`).join("")}
+            </tr>
+          </thead>
+          <tbody>
+            ${el.rows.map(row =>
+              `<tr>${row.map(cell => `<td style="border:1px solid #ccc; padding:8px;">${cell}</td>`).join("")}</tr>`
+            ).join("")}
+          </tbody>
+        </table>`;
       }
+
       return "";
     })
     .join("\n");
@@ -247,6 +302,7 @@ export default function CreateLienzo() {
     localStorage.setItem("htmlGenerado", generatedHTML);
   }, [generatedHTML]);
 
+  //Sidebar
   return (
     <>
       <Navbar />
@@ -265,6 +321,14 @@ export default function CreateLienzo() {
           <button onClick={handleCreateCard} className="sidebar-button">
             <Plus size={16} /> Crear tarjeta
           </button>
+          <button onClick={handleCreateCheckboxList} className="sidebar-button">
+            <Plus size={16} /> Crear checkbox list
+          </button>
+          <button onClick={handleCreateTable} className="sidebar-button">
+            <Plus size={16} /> Crear tabla 3x3
+          </button>
+
+
 
 
           <div className="menu-eliminar">
@@ -444,7 +508,88 @@ export default function CreateLienzo() {
                     {el.text}
                   </div>
                 );
+              }else if (el.type === "checkbox-list") {
+                return (
+                  <div
+                    key={el.id}
+                    style={{
+                      position: "absolute",
+                      left: el.x,
+                      top: el.y,
+                      border: el.id === selectedElementId ? "2px solid blue" : "1px solid #ccc",
+                      padding: "10px",
+                      backgroundColor: "#f9f9f9",
+                      borderRadius: "6px",
+                      cursor: "move"
+                    }}
+                    onMouseDown={handleMouseDown(el.id)}
+                    onClick={() => handleElementClick(el.id)}
+                  >
+                    {el.items.map((item, idx) => (
+                      <label key={idx} style={{ display: "block", marginBottom: "4px" }}>
+                        <input type="checkbox"/> {item}
+                      </label>
+                    ))}
+                  </div>
+                );
+              }else if (el.type === "table") {
+                return (
+                  <table
+                    key={el.id}
+                    style={{
+                      position: "absolute",
+                      left: el.x,
+                      top: el.y,
+                      borderCollapse: "collapse",
+                      fontSize: "14px",
+                      width: "320px", // ajustado para móviles
+                      backgroundColor: "#fff",
+                      border: el.id === selectedElementId ? "2px solid blue" : "1px solid #ccc",
+                      boxShadow: el.id === selectedElementId ? "0 0 6px rgba(33, 150, 243, 0.7)" : "none",
+                      cursor: "move"
+                    }}
+                    onMouseDown={handleMouseDown(el.id)}
+                    onClick={() => handleElementClick(el.id)}
+                  >
+                    <thead>
+                      <tr>
+                        {el.headers.map((header, idx) => (
+                          <th
+                            key={idx}
+                            style={{
+                              border: "1px solid #ccc",
+                              padding: "8px",
+                              backgroundColor: "#f5f5f5"
+                            }}
+                          >
+                            {header}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {el.rows.map((row, rowIndex) => (
+                        <tr key={rowIndex}>
+                          {row.map((cell, cellIndex) => (
+                            <td
+                              key={cellIndex}
+                              style={{
+                                border: "1px solid #ccc",
+                                padding: "8px",
+                                textAlign: "left"
+                              }}
+                            >
+                              {cell}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                );
               }
+
+
               
             })}
           </div>
@@ -459,7 +604,7 @@ export default function CreateLienzo() {
             rows="10"
             cols="50"
           />
-          <button onClick={() => navigate('/generar-angular')}>
+          <button onClick={() => navigate('/generar-flutter')}>
             Descargar Vista en Angular
           </button>
 

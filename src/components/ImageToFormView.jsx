@@ -114,7 +114,6 @@
 //   );
 // };
 
-
 import React, { useState } from "react";
 import Tesseract from "tesseract.js";
 import { useNavigate } from "react-router-dom";
@@ -135,29 +134,62 @@ const ImageToFormView = () => {
       .then(({ data: { text } }) => {
         const lines = text.split("\n").map(l => l.trim()).filter(Boolean);
 
-        // ✅ Reconocimiento mejorado con "tabla"
         const elements = lines.map((line) => {
           const lower = line.toLowerCase();
 
+          // ✔️ Tabla
+          if (lower.includes("tabla")) {
+            return { type: "table", label: line };
+          }
+
+          // ✔️ Botones
           const isButton = ["enviar", "submit", "registrar", "aceptar", "guardar", "buscar", "cancelar"]
             .some(word => lower.includes(word));
           if (isButton) {
             return { type: "button", label: line };
           }
 
-          if (lower.includes("correo") || lower.includes("email")) {
-            return { type: "email", label: line };
-          }
-          if (lower.includes("contraseña") || lower.includes("password")) {
-            return { type: "password", label: line };
-          }
-          if (lower.includes("teléfono") || lower.includes("telefono") || lower.includes("celular")) {
-            return { type: "tel", label: line };
-          }
-          if (lower.includes("tabla")) {
-            return { type: "table", label: line };
+          // ✔️ Checkbox-list con símbolos como ☐, [ ], ( )
+          const checkboxSymbols = ["☐", "[ ]", "( )"];
+          const hasCheckboxSymbol = checkboxSymbols.some(sym => line.includes(sym));
+
+          if (hasCheckboxSymbol && line.includes(":")) {
+            const [labelRaw, rest] = line.split(":");
+            const regex = /(?:☐|\[\s*\]|\(\s*\))\s*([\wáéíóúÁÉÍÓÚüÜñÑ]+)/g;
+            const options = [];
+            let match;
+
+            while ((match = regex.exec(rest)) !== null) {
+              options.push(match[1]);
+            }
+
+            if (options.length >= 2) {
+              return {
+                type: "checkbox-list",
+                label: labelRaw.trim(),
+                options
+              };
+            }
           }
 
+          // ✔️ NUEVO: detectar sintaxis Palabra: opcion1, opcion2, ...
+          if (line.includes(":")) {
+            const [label, optionsRaw] = line.split(":");
+            const options = optionsRaw
+              .split(",")
+              .map(o => o.trim())
+              .filter(Boolean);
+
+            if (options.length >= 2) {
+              return {
+                type: "checkbox-list",
+                label: label.trim(),
+                options
+              };
+            }
+          }
+
+          // ✔️ Por defecto: input
           return { type: "input", label: line };
         });
 
@@ -179,7 +211,7 @@ const ImageToFormView = () => {
               align-items: center;
               height: 100vh;
             }
-        
+
             .form-wrapper {
               background: white;
               padding: 40px;
@@ -188,43 +220,43 @@ const ImageToFormView = () => {
               width: 100%;
               max-width: 600px;
             }
-        
+
             form {
               display: flex;
               flex-direction: column;
               gap: 16px;
             }
-        
+
             label {
               font-weight: bold;
               margin-bottom: 6px;
             }
-        
+
             input, button, table {
               font-size: 16px;
               padding: 10px;
               border-radius: 6px;
               border: 1px solid #ccc;
             }
-        
+
             button {
               background-color: #007bff;
               color: white;
               border: none;
               cursor: pointer;
             }
-        
+
             table {
               border-collapse: collapse;
               width: 100%;
             }
-        
+
             th, td {
               border: 1px solid #999;
               padding: 8px;
               text-align: center;
             }
-        
+
             th {
               background-color: #f0f0f0;
             }
@@ -255,6 +287,11 @@ const ImageToFormView = () => {
                     '  </tbody>\n' +
                     '</table>'
                   );
+                } else if (field.type === "checkbox-list") {
+                  return `<label>${field.label}</label>\n` +
+                    field.options.map(option =>
+                      `<label style="display:block;"><input type="checkbox" /> ${option}</label>`
+                    ).join("\n");
                 }
                 return "";
               }).join("\n")}
@@ -263,9 +300,7 @@ const ImageToFormView = () => {
         </body>
         </html>
         `.trim();
-        
 
-        // Redirigir a la nueva vista con datos
         navigate("/vista-generada", {
           state: {
             formFields: elements,

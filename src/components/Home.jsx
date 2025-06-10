@@ -5,6 +5,7 @@ import '../styles/Home.css';
 import lienzoImg from '../assets/lienzo.svg';
 import SubirArc from '../assets/subirImg.svg';
 import SubirDoc from '../assets/subir_archivo.svg';
+import SubirPrompt from '../assets/Proyecto.svg';
 import { v4 as uuidv4 } from 'uuid';
 
 const Home = () => {
@@ -60,8 +61,18 @@ const Home = () => {
             <img src={SubirArc} alt="Archivo" className="card-image" />
             <h2>Sube una imagen y listo</h2>
             <p>Convierte un boceto o diseño en imagen en una vista funcional fácilmente.</p>
-            <button className="card-button" onClick={() => navigate('/home')} >
+            <button className="card-button" onClick={() => navigate('/diagrams/createimage')} >
               Subir Imagen
+            </button>
+          </div>
+
+           {/* Tarjeta 4 - Prompt */}
+          <div className="card">
+            <img src={SubirPrompt} alt="Archivo" className="card-image" />
+            <h2>Chatea con el Prompt</h2>
+            <p>Dile al prompt tu idea de una vista y el te la generara facilmente.</p>
+            <button className="card-button" onClick={() => navigate('/prompt')} >
+              Chatear
             </button>
           </div>
         </div>
