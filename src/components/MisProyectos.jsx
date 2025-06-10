@@ -17,7 +17,7 @@ export default function MisProyectos() {
           return;
         }
 
-        const response = await axios.get('http://localhost:4000/api/projects', {
+        const response = await axios.get('https://disview.onrender.com/api/projects', {
           headers: {
             Authorization: `Bearer ${token}`
           }

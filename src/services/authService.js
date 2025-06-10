@@ -1,4 +1,5 @@
-const API_URL = 'http://localhost:4000/api/auth';
+//const API_URL = 'http://localhost:4000/api/auth';
+const API_URL = 'https://disview.onrender.com/api/auth';
 
 export const register = async (userData) => {
   const res = await fetch(`${API_URL}/register`, {

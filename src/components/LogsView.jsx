@@ -9,7 +9,7 @@ const LogsView = () => {
   useEffect(() => {
     const token = localStorage.getItem('token');   // ✅ Obtener token
 
-    fetch('http://localhost:4000/api/logs', {
+    fetch('https://disview.onrender.com/api/logs', {
       headers: {
         'Authorization': `Bearer ${token}`
       }

@@ -1,3 +1,4 @@
+//http://localhost:4000
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import '../styles/profile.css';
@@ -10,7 +11,7 @@ const EditProfile = () => {
   const token = localStorage.getItem('token');
 
   useEffect(() => {
-    axios.get('http://localhost:4000/api/users/me', {
+    axios.get('https://disview.onrender.com/api/users/me', {
       headers: { Authorization: `Bearer ${token}` }
     })
     .then(res => setForm({ name: res.data.name, email: res.data.email }))
@@ -22,7 +23,7 @@ const EditProfile = () => {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      await axios.put('http://localhost:4000/api/users/me', form, {
+      await axios.put('https://disview.onrender.com/api/users/me', form, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setMessage('Perfil actualizado con éxito');
