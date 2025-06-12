@@ -17,13 +17,6 @@ export default function CreateLienzo() {
   const { roomId } = useParams();
   const navigate = useNavigate();
   const [elementsDraft, setElementsDraft] = useState([]);
-  const [htmlFinal, setHtmlFinal] = useState("");
-
-
-
- 
-
-
 
 
   // Funciones de creación
@@ -306,21 +299,9 @@ export default function CreateLienzo() {
     .join("\n");
 
   useEffect(() => {
-    const existe = localStorage.getItem("htmlGenerado");
-    if (!existe) {
-      localStorage.setItem("htmlGenerado", generatedHTML);
-    }
+    localStorage.setItem("htmlGenerado", generatedHTML);
   }, [generatedHTML]);
 
-
-   useEffect(() => {
-    const guardado = localStorage.getItem("htmlGenerado");
-    if (guardado) {
-      setHtmlFinal(guardado);
-    } else {
-      setHtmlFinal(generatedHTML);
-    }
-  }, [generatedHTML]);
   //Sidebar
   return (
     <>
@@ -618,12 +599,11 @@ export default function CreateLienzo() {
           <h2>📄 HTML generado</h2>
           <textarea
             className="textarea-html"
-            value={htmlFinal}
+            value={generatedHTML}
             readOnly
             rows="10"
             cols="50"
           />
-
           <button onClick={() => navigate('/generar-flutter')}>
             Descargar Vista en Angular
           </button>
