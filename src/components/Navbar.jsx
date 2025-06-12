@@ -40,7 +40,8 @@ const Navbar = () => {
             <span onClick={() => setDiagramMenuOpen(!diagramMenuOpen)}>Diagramas ▾</span>
             {diagramMenuOpen && (
               <ul className="submenu">
-                <li><Link to="/diagrams/creatediagram">Subir diagrama de clases</Link></li>
+                {/* <li><Link to="/diagrams/creatediagram">Subir diagrama de clases</Link></li> */}
+                <li><Link to="/diagrams/createimage">Subir imagen del boceto</Link></li>
                 <li><Link to="/diagrams/createlienzo">Crear lienzo</Link></li>
                 <li><Link to="/diagrams/prompt">Prompt</Link></li>
 

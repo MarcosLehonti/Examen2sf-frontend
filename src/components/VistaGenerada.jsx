@@ -15,14 +15,12 @@ const VistaGenerada = () => {
     }
   }, [generatedCode]);
 
-  const handleCompartirSala = () => {
-    const roomId = uuidv4();
-    navigate(`/sala/${roomId}`, {
-      state: {
-        generatedCode,
-      },
-    });
+
+  const handleConvertirAComponentes = () => {
+    localStorage.setItem("htmlGenerado", generatedCode);
+    navigate("/generar-componentes");
   };
+
 
   const handleDescargarYRedirigir = () => {
     localStorage.setItem("htmlGenerado", generatedCode);
@@ -168,13 +166,17 @@ const VistaGenerada = () => {
               <h4>📄 Código HTML Generado</h4>
               <textarea readOnly value={generatedCode}></textarea>
               <br />
-              <button onClick={handleDescargarYRedirigir}>
-                Descargar código
-              </button>
-              <button style={{ marginTop: "10px" }} onClick={handleCompartirSala}>
-                🔗 Compartir en Sala
-              </button>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '12px' }}>
+                <button onClick={handleDescargarYRedirigir}>
+                  Descargar código
+                </button>
+                <button onClick={handleConvertirAComponentes}>
+                  🔄 Convertir a Componentes del Lienzo
+                </button>
+              </div>
             </div>
+
           </>
         )}
       </div>

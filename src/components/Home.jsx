@@ -46,7 +46,7 @@ const Home = () => {
             </button>
           </div>
 
-          {/* Tarjeta 2 - Subir UML */}
+          {/* Tarjeta 2 - Subir UML
           <div className="card">
             <img src={SubirDoc} alt="Documento" className="card-image" />
             <h2>Genera tu vista subiendo un archivo UML</h2>
@@ -54,7 +54,7 @@ const Home = () => {
             <button className="card-button" onClick={() => navigate('/diagrams/creatediagram')} >
               Subir UML
             </button>
-          </div>
+          </div> */}
 
           {/* Tarjeta 3 - Subir Imagen */}
           <div className="card">
@@ -71,7 +71,7 @@ const Home = () => {
             <img src={SubirPrompt} alt="Archivo" className="card-image" />
             <h2>Chatea con el Prompt</h2>
             <p>Dile al prompt tu idea de una vista y el te la generara facilmente.</p>
-            <button className="card-button" onClick={() => navigate('/prompt')} >
+            <button className="card-button" onClick={() => navigate('/diagrams/prompt')} >
               Chatear
             </button>
           </div>

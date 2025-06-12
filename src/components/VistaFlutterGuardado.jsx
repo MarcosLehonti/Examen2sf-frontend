@@ -106,7 +106,7 @@ ${flutterCode}
     <>
       <Navbar />
       <div style={{ padding: '40px', fontFamily: 'Arial' }}>
-        <h2>Código Flutter guardado</h2>
+        <h2>Código Flutter a componentes del Lienzo</h2>
 
         <textarea
           style={{
@@ -137,50 +137,72 @@ ${flutterCode}
             cursor: loading ? 'not-allowed' : 'pointer',
           }}
         >
-          {loading ? 'Convirtiendo...' : 'Convertir a HTML'}
+          {loading ? 'Convirtiendo...' : 'Convertir a componentes en el lienzo'}
         </button>
 
 
-        <button
-  onClick={() => {
-    localStorage.setItem('htmlGenerado', htmlResult);
-    alert('HTML guardado correctamente. Redirigiendo al lienzo...');
-    window.location.href = '/lienzo'; // ajusta la ruta si es diferente
-  }}
-  style={{
-    marginTop: '10px',
-    padding: '10px 20px',
-    backgroundColor: '#17a2b8',
-    color: 'white',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer',
-  }}
->
-  Llevar al Lienzo
-</button>
+      {htmlResult && (
+  <>
+    <h3 style={{ marginTop: '30px' }}>Componentes del Lienzo generado:</h3>
+
+    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+      <button
+        onClick={() => {
+          navigator.clipboard.writeText(htmlResult);
+          alert('HTML copiado al portapapeles');
+        }}
+        style={{
+          padding: '8px 16px',
+          backgroundColor: '#28a745',
+          color: 'white',
+          border: 'none',
+          borderRadius: '4px',
+          cursor: 'pointer',
+        }}
+      >
+        Copiar Componentes
+      </button>
+
+      <button
+        onClick={() => {
+          localStorage.setItem('htmlGenerado', htmlResult);
+          alert('HTML guardado correctamente. Redirigiendo al lienzo...');
+          window.location.href = '/diagrams/createlienzo';
+        }}
+        style={{
+          padding: '8px 16px',
+          backgroundColor: '#17a2b8',
+          color: 'white',
+          border: 'none',
+          borderRadius: '4px',
+          cursor: 'pointer',
+        }}
+      >
+        ir al lienzo
+      </button>
+    </div>
+
+    <textarea
+      style={{
+        width: '100%',
+        height: '400px',
+        fontFamily: 'monospace',
+        fontSize: '14px',
+        whiteSpace: 'pre',
+        border: '1px solid #ccc',
+        padding: '10px',
+        borderRadius: '4px',
+        backgroundColor: '#f1f1f1',
+      }}
+      value={htmlResult}
+      readOnly
+    />
+  </>
+)}
 
 
-        {htmlResult && (
-          <>
-            <h3 style={{ marginTop: '30px' }}>HTML generado</h3>
-            <textarea
-              style={{
-                width: '100%',
-                height: '400px',
-                fontFamily: 'monospace',
-                fontSize: '14px',
-                whiteSpace: 'pre',
-                border: '1px solid #ccc',
-                padding: '10px',
-                borderRadius: '4px',
-                backgroundColor: '#f1f1f1',
-              }}
-              value={htmlResult}
-              readOnly
-            />
-          </>
-        )}
+
+       
       </div>
     </>
   );

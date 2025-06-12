@@ -197,6 +197,108 @@ export default function CreateLienzo() {
     console.log(`Label ${id} saved`);
   };
 
+
+
+
+  const handleHTMLChange = (html) => {
+  // Guardar en localStorage (opcional)
+  localStorage.setItem("htmlGenerado", html);
+
+  // Crear un DOM temporal para parsear el HTML
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, "text/html");
+
+  const newElements = [];
+
+  doc.body.childNodes.forEach((node, index) => {
+    if (node.nodeType !== 1) return; // Asegurarse que sea un nodo elemento
+
+    const tag = node.tagName.toLowerCase();
+    const style = node.style;
+
+    const base = {
+      id: index + 1,
+      x: parseInt(style.left) || 0,
+      y: parseInt(style.top) || 0,
+    };
+
+    switch (tag) {
+      case "button":
+        newElements.push({
+          ...base,
+          type: "button",
+          text: node.textContent,
+          color: style.backgroundColor || "#007bff"
+        });
+        break;
+
+      case "label":
+        newElements.push({
+          ...base,
+          type: "label",
+          text: node.textContent,
+          fontSize: parseInt(style.fontSize) || 14,
+          width: parseInt(style.width) || 100,
+          height: parseInt(style.height) || 30
+        });
+        break;
+
+      case "input":
+        newElements.push({
+          ...base,
+          type: "input",
+          text: node.getAttribute("placeholder") || ""
+        });
+        break;
+
+      case "div":
+        if (style.backgroundColor && style.width && style.height) {
+          newElements.push({
+            ...base,
+            type: "card",
+            width: parseInt(style.width),
+            height: parseInt(style.height),
+            backgroundColor: style.backgroundColor,
+            text: node.textContent
+          });
+        } else {
+          // Podría ser un checkbox-list
+          const checkboxes = Array.from(node.querySelectorAll("label"));
+          const items = checkboxes.map(label => label.textContent.trim().replace(/^.+?\s/, ""));
+          if (items.length > 0) {
+            newElements.push({
+              ...base,
+              type: "checkbox-list",
+              items
+            });
+          }
+        }
+        break;
+
+      case "table":
+        const headers = Array.from(node.querySelectorAll("thead th")).map(th => th.textContent.trim());
+        const rows = Array.from(node.querySelectorAll("tbody tr")).map(tr =>
+          Array.from(tr.querySelectorAll("td")).map(td => td.textContent.trim())
+        );
+        newElements.push({
+          ...base,
+          type: "table",
+          headers,
+          rows
+        });
+        break;
+
+      default:
+        break;
+    }
+  });
+
+  // Actualiza el lienzo
+  syncElements(newElements);
+  setElementsDraft(newElements);
+};
+
+
   // 🔹 MODIFICADO: syncElements con socketRef
   const syncElements = (newElements) => {
     setElements(newElements);
@@ -229,6 +331,7 @@ export default function CreateLienzo() {
   // 🔹 MODIFICADO: Conexión socket estable
   useEffect(() => {
     socketRef.current = io('https://disview.onrender.com');
+    //socketRef.current = io('http://localhost:4000');
 
     if (roomId) {
       socketRef.current.emit('join-room', roomId);
@@ -600,12 +703,13 @@ export default function CreateLienzo() {
           <textarea
             className="textarea-html"
             value={generatedHTML}
-            readOnly
+            onChange={(e) => handleHTMLChange(e.target.value)}
             rows="10"
             cols="50"
           />
+
           <button onClick={() => navigate('/generar-flutter')}>
-            Descargar Vista en Angular
+            Descargar Vista en Flutter
           </button>
 
           <button onClick={() => navigate('/guardar-proyecto')}>

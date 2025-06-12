@@ -160,7 +160,7 @@ flutter:
           marginRight: '10px',
         }}
       >
-        {loading ? 'Generando...' : 'Crear Proyecto'}
+        {loading ? 'Generando...' : 'Enviar'}
       </button>
 
       {/* Botón para descargar ZIP */}
@@ -203,7 +203,7 @@ flutter:
             marginLeft: '10px',
           }}
         >
-          Llevar a Lienzo
+          Convierte tu codigo a compoenntes del lienzo
         </button>
       )}
 

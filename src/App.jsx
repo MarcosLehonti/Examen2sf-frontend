@@ -22,6 +22,8 @@ import CrearProyectoView from './components/Prompt';
 import GenerarFlutter from './components/GenerarFlutter';
 import GenerarFlutterBoceto from './components/GenerarFlutterBoceto';
 import VistaFlutterGuardado from './components/VistaFlutterGuardado';
+import VistaHTMLaLienzo from './components/BocetoALienzo';
+
 import Manual from './components/Manual';
 
 function App() {
@@ -29,19 +31,20 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login/>}/>
-        <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+        <Route path="/home" element={<Home />} />
         <Route path="/register" element={<Register />} />
         <Route path="/generar-flutter" element={< GenerarFlutter/>} />
         <Route path="/generar-flutter-boceto" element={< GenerarFlutterBoceto/>} />
         <Route path="/profile/edit" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
         <Route path="/profile/password" element={<ProtectedRoute><ChangePassword /></ProtectedRoute>} />
-        <Route path="/vista-generada" element={<ProtectedRoute><VistaGenerada /></ProtectedRoute>} />
+        <Route path="/vista-generada" element={<VistaGenerada />} />
         <Route path="/sala/:roomId" element={<ProtectedRoute><SalaColaborativa /></ProtectedRoute>} />
-        <Route path="/diagrams/createlienzo" element={<ProtectedRoute><Prueba /></ProtectedRoute>} />
-        <Route path="/diagrams/createlienzo/:roomId" element={<ProtectedRoute><Prueba /></ProtectedRoute>} />
+        <Route path="/diagrams/createlienzo" element={<Prueba />} />
+        <Route path="/diagrams/createlienzo/:roomId" element={<Prueba />} />
         <Route path="/diagrams/creatediagram" element={<ProtectedRoute><VisorDiagramas /></ProtectedRoute>} />
         <Route path="/diagrams/prompt" element={<CrearProyectoView />} />
         <Route path="/flutter-guardado" element={<VistaFlutterGuardado />} />
+        <Route path="/generar-componentes" element={<VistaHTMLaLienzo />} />
 
 
         <Route path="/generar-angular" element={<ProtectedRoute><GenerarAngular /></ProtectedRoute>} />
@@ -50,7 +53,7 @@ function App() {
         <Route path="/logs" element={<ProtectedRoute><LogsView /></ProtectedRoute>} />
         <Route path="/guardar-proyecto" element={<ProtectedRoute><GuardarProyecto /></ProtectedRoute>} />
         <Route path="/diagrams/mis-proyectos" element={<ProtectedRoute><MisProyectos /></ProtectedRoute>} />
-        <Route path="/diagrams/createimage" element={<ProtectedRoute><StartProjectView /></ProtectedRoute>} />
+        <Route path="/diagrams/createimage" element={<StartProjectView />} />
 
 
         <Route path="/manual" element={<Manual/>}/>
