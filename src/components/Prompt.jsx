@@ -178,7 +178,38 @@ flutter:
         >
           Descargar ZIP
         </button>
+
       )}
+
+    {/* Mostrar solo si hay código válido */}
+      {resultado && !resultado.includes('Error') && (
+        <button
+          onClick={() => {
+            if (resultado.trim().length > 0) {
+              localStorage.setItem('flutterGenerado', resultado);
+              alert('Código almacenado en localStorage. Redirigiendo al lienzo...');
+              window.location.href = '/flutter-guardado';
+            } else {
+              alert('No hay código válido para guardar.');
+            }
+          }}
+          style={{
+            padding: '10px 20px',
+            backgroundColor: '#17a2b8',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            marginLeft: '10px',
+          }}
+        >
+          Llevar a Lienzo
+        </button>
+      )}
+
+
+
+      
 
       {/* Resultado */}
       {resultado && (
