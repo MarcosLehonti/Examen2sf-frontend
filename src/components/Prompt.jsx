@@ -6,9 +6,10 @@ import Navbar from './Navbar';
 
 export default function CrearProyectoView() {
   const [inputValue, setInputValue] = useState('');
-  const [resultado, setResultado] = useState('');
+  const [resultado, setResultado] = useState(''); // solo la última respuesta de la IA
   const [loading, setLoading] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
+  const [chat, setChat] = useState([]); // [{sender: 'user'|'ia', text: ''}]
   const recognitionRef = useRef(null);
 
   // Inicializar Gemini
@@ -49,23 +50,25 @@ export default function CrearProyectoView() {
         console.warn("No se encontró código Dart válido en la respuesta de Gemini.");
         return 'Error al generar el código con Gemini';
       }
-
     } catch (err) {
       console.error('Error llamando a Gemini:', err);
       return 'Error al generar el código con Gemini';
     }
   }
 
-  // Manejador del botón para crear el proyecto
-  async function handleCrearProyecto() {
-    if (!inputValue.trim()) {
-      setResultado('Por favor, ingrese un prompt válido.');
-      return;
-    }
+  // Manejador para enviar mensaje tipo chat
+  async function handleSendChat(e) {
+    e?.preventDefault?.();
+    if (!inputValue.trim()) return;
 
+    const msg = inputValue.trim();
+    setChat(prev => [...prev, { sender: 'user', text: msg }]);
+    setInputValue('');
     setLoading(true);
-    const geminiString = await procesarConGemini(inputValue);
-    setResultado(geminiString);
+
+    const geminiString = await procesarConGemini(msg);
+    setChat(prev => [...prev, { sender: 'ia', text: geminiString }]);
+    setResultado(geminiString); // siempre guarda la última respuesta
     setLoading(false);
   }
 
@@ -174,112 +177,189 @@ flutter:
   return (
     <>
       <Navbar />
-      <div style={{ padding: '150px', fontFamily: 'Arial' }}>
-        <h2>Crear nuevo proyecto Flutter</h2>
-
-        {/* Input de texto */}
-        <input
-          type="text"
-          placeholder="Describe la interfaz a generar"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          style={{ padding: '10px', width: '100%', maxWidth: '400px', marginBottom: '10px' }}
-        />
-        <br />
-
-        {/* 🎤 Botón de grabar audio */}
-        <button
-          onClick={isRecording ? handleStopRecording : handleStartRecording}
+      <div style={{ padding: '50px 0', fontFamily: 'Arial', minHeight: '100vh', background: '#f7f9fa' }}>
+        <h2 style={{ textAlign: 'center' }}>Crear nuevo proyecto Flutter</h2>
+        <div
           style={{
-            padding: '10px 20px',
-            backgroundColor: isRecording ? '#d90429' : '#6c47d6',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontWeight: 'bold',
-            marginRight: '10px',
+            margin: 'auto',
+            maxWidth: '520px',
+            background: '#fff',
+            borderRadius: 12,
+            boxShadow: '0 2px 14px #a78bfa33',
+            padding: '32px',
+            minHeight: '500px',
+            display: 'flex',
+            flexDirection: 'column'
           }}
         >
-          {isRecording ? '⏹️ Detener' : '🎤 Usar micrófono'}
-        </button>
 
-        {/* Botón para crear proyecto */}
-        <button
-          onClick={handleCrearProyecto}
-          disabled={loading}
-          style={{
-            padding: '10px 20px',
-            backgroundColor: loading ? '#ccc' : '#007bff',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: loading ? 'not-allowed' : 'pointer',
-            marginRight: '10px',
-          }}
-        >
-          {loading ? 'Generando...' : 'Enviar'}
-        </button>
-
-        {/* Botón para descargar ZIP */}
-        {resultado && !resultado.includes('Error') && (
-          <button
-            onClick={handleDescargarZip}
+          {/* Chat messages */}
+          <div
             style={{
-              padding: '10px 20px',
-              backgroundColor: '#28a745',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-            }}
-          >
-            Descargar ZIP
-          </button>
-        )}
-
-        {/* Mostrar solo si hay código válido */}
-        {resultado && !resultado.includes('Error') && (
-          <button
-            onClick={() => {
-              if (resultado.trim().length > 0) {
-                localStorage.setItem('flutterGenerado', resultado);
-                alert('Código almacenado en localStorage. Redirigiendo al lienzo...');
-                window.location.href = '/flutter-guardado';
-              } else {
-                alert('No hay código válido para guardar.');
-              }
-            }}
-            style={{
-              padding: '10px 20px',
-              backgroundColor: '#17a2b8',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              marginLeft: '10px',
-            }}
-          >
-            Convierte tu codigo a componentes del lienzo
-          </button>
-        )}
-
-        {/* Resultado */}
-        {resultado && (
-          <pre
-            style={{
-              marginTop: '20px',
-              backgroundColor: '#f5f5f5',
-              padding: '10px',
-              borderRadius: '4px',
-              whiteSpace: 'pre-wrap',
-              maxHeight: '400px',
+              flex: 1,
+              minHeight: 200,
+              maxHeight: 340,
               overflowY: 'auto',
+              background: '#f4f4fa',
+              borderRadius: 8,
+              padding: 16,
+              marginBottom: 18,
+              border: '1px solid #e3e1ef'
             }}
           >
-            {resultado}
-          </pre>
-        )}
+            {chat.length === 0 && (
+              <div style={{ color: '#888', textAlign: 'center', fontStyle: 'italic' }}>
+                Empieza la conversación con tu prompt (escrito o por voz)...
+              </div>
+            )}
+            {chat.map((msg, i) => (
+              <div
+                key={i}
+                style={{
+                  textAlign: msg.sender === 'user' ? 'right' : 'left',
+                  margin: '12px 0',
+                }}
+              >
+                <div
+                  style={{
+                    display: 'inline-block',
+                    background: msg.sender === 'user' ? '#e0c3fc' : '#22223b',
+                    color: msg.sender === 'user' ? '#312244' : '#fff',
+                    borderRadius: 8,
+                    padding: '10px 16px',
+                    maxWidth: '85%',
+                    fontSize: 15,
+                    boxShadow: msg.sender === 'user'
+                      ? '1px 1px 8px #c3bafc88'
+                      : '1px 1px 8px #88888822'
+                  }}
+                >
+                  {msg.text}
+                </div>
+              </div>
+            ))}
+            {loading && (
+              <div style={{ color: '#5a189a', fontStyle: 'italic', marginTop: 10 }}>
+                La IA está pensando...
+              </div>
+            )}
+          </div>
+
+          {/* Input de texto y botones */}
+          <form onSubmit={handleSendChat} style={{ display: 'flex', gap: 8 }}>
+            <input
+              type="text"
+              placeholder="Describe la interfaz a generar"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              style={{
+                padding: '10px',
+                width: '100%',
+                borderRadius: '4px',
+                border: '1px solid #bdbddd',
+                fontSize: 15,
+              }}
+              disabled={loading}
+            />
+
+            {/* 🎤 Botón de grabar audio */}
+            <button
+              type="button"
+              onClick={isRecording ? handleStopRecording : handleStartRecording}
+              style={{
+                padding: '0 12px',
+                backgroundColor: isRecording ? '#d90429' : '#6c47d6',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                fontWeight: 'bold',
+                fontSize: 20,
+                cursor: 'pointer',
+              }}
+              title="Dictar con micrófono"
+              disabled={loading}
+            >
+              {isRecording ? '⏹️' : '🎤'}
+            </button>
+
+            <button
+              type="submit"
+              disabled={loading}
+              style={{
+                padding: '0 20px',
+                backgroundColor: loading ? '#ccc' : '#007bff',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                fontWeight: 'bold',
+                fontSize: 16,
+                cursor: loading ? 'not-allowed' : 'pointer'
+              }}
+            >
+              {loading ? 'Enviando...' : 'Enviar'}
+            </button>
+          </form>
+
+          {/* Acciones sobre la última respuesta válida */}
+          <div style={{ marginTop: 24, display: 'flex', gap: 10 }}>
+            {resultado && !resultado.includes('Error') && (
+              <>
+                <button
+                  onClick={handleDescargarZip}
+                  style={{
+                    padding: '10px 20px',
+                    backgroundColor: '#28a745',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Descargar ZIP
+                </button>
+
+                <button
+                  onClick={() => {
+                    if (resultado.trim().length > 0) {
+                      localStorage.setItem('flutterGenerado', resultado);
+                      alert('Código almacenado en localStorage. Redirigiendo al lienzo...');
+                      window.location.href = '/flutter-guardado';
+                    } else {
+                      alert('No hay código válido para guardar.');
+                    }
+                  }}
+                  style={{
+                    padding: '10px 20px',
+                    backgroundColor: '#17a2b8',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Convierte tu código a componentes del lienzo
+                </button>
+              </>
+            )}
+          </div>
+
+          {/* Último resultado como preview */}
+          {resultado && (
+            <pre
+              style={{
+                marginTop: '18px',
+                backgroundColor: '#f5f5f5',
+                padding: '10px',
+                borderRadius: '4px',
+                whiteSpace: 'pre-wrap',
+                maxHeight: '280px',
+                overflowY: 'auto',
+              }}
+            >
+              {resultado}
+            </pre>
+          )}
+        </div>
       </div>
     </>
   );
