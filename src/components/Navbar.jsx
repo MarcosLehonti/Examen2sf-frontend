@@ -41,7 +41,9 @@ const Navbar = () => {
             {diagramMenuOpen && (
               <ul className="submenu">
                 {/* <li><Link to="/diagrams/creatediagram">Subir diagrama de clases</Link></li> */}
-                <li><Link to="/diagrams/createimage">Subir imagen del boceto</Link></li>
+                <li><Link to="/diagrams/createimage">Subir imagen del boceto + IA</Link></li>
+                <li><Link to="/diagrams/createimage-ocr">Subir imagen del boceto + OCR</Link></li>
+
                 <li><Link to="/diagrams/createlienzo">Crear lienzo</Link></li>
                 <li><Link to="/diagrams/prompt">Prompt</Link></li>
 

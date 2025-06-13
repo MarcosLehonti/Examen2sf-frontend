@@ -23,9 +23,8 @@ import GenerarFlutter from './components/GenerarFlutter';
 import GenerarFlutterBoceto from './components/GenerarFlutterBoceto';
 import VistaFlutterGuardado from './components/VistaFlutterGuardado';
 import VistaHTMLaLienzo from './components/BocetoALienzo';
-
 import Manual from './components/Manual';
-
+import StartProjectView2 from './components/StarProjectView2';
 function App() {
   return (
     <BrowserRouter>
@@ -33,7 +32,7 @@ function App() {
         <Route path="/" element={<Login/>}/>
         <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
         <Route path="/register" element={<Register />} />
-        <Route path="/generar-flutter" element={<ProtectedRoute><GenerarFlutter /></ProtectedRoute>} />
+        <Route path="/generar-flutter" element={<GenerarFlutter />} />
         <Route path="/generar-flutter-boceto" element={<GenerarFlutterBoceto />} />
         <Route path="/profile/edit" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
         <Route path="/profile/password" element={<ProtectedRoute><ChangePassword /></ProtectedRoute>} />
@@ -42,8 +41,9 @@ function App() {
         <Route path="/diagrams/createlienzo" element={<Prueba />} />
         <Route path="/diagrams/createlienzo/:roomId" element={<Prueba />} />
         <Route path="/diagrams/creatediagram" element={<ProtectedRoute><VisorDiagramas /></ProtectedRoute>} />
-        <Route path="/diagrams/prompt" element={<ProtectedRoute><CrearProyectoView /></ProtectedRoute>} />
-        <Route path="/flutter-guardado" element={<ProtectedRoute><VistaFlutterGuardado /></ProtectedRoute>} />
+        <Route path="/diagrams/prompt" element={<CrearProyectoView />
+      } />
+        <Route path="/flutter-guardado" element={<VistaFlutterGuardado />} />
         <Route path="/generar-componentes" element={<VistaHTMLaLienzo />} />
         <Route path="/generar-angular" element={<ProtectedRoute><GenerarAngular /></ProtectedRoute>} />
         <Route path="/users" element={<ProtectedRoute><ListaUsuarios /></ProtectedRoute>} />
@@ -52,6 +52,9 @@ function App() {
         <Route path="/guardar-proyecto" element={<ProtectedRoute><GuardarProyecto /></ProtectedRoute>} />
         <Route path="/diagrams/mis-proyectos" element={<ProtectedRoute><MisProyectos /></ProtectedRoute>} />
         <Route path="/diagrams/createimage" element={<StartProjectView />} />
+        <Route path="/diagrams/createimage-ocr" element={<StartProjectView2 />} />
+      
+        
         <Route path="/manual" element={<Manual/>}/>
 
       </Routes>
