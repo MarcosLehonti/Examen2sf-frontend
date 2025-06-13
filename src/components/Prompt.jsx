@@ -207,10 +207,6 @@ flutter:
         </button>
       )}
 
-
-
-      
-
       {/* Resultado */}
       {resultado && (
         <pre

@@ -1,325 +1,197 @@
-
-// import React, { useState } from "react";
-// import Tesseract from "tesseract.js";
-
-// const ImageToFormView = () => {
-//   const [formFields, setFormFields] = useState([]);
-//   const [loading, setLoading] = useState(false);
-//   const [generatedCode, setGeneratedCode] = useState("");
-//   const [imagePreview, setImagePreview] = useState(null);
-
-//   const handleImageUpload = (e) => {
-//     const file = e.target.files[0];
-//     if (!file) return;
-
-//     setImagePreview(URL.createObjectURL(file));
-//     setLoading(true);
-
-//     Tesseract.recognize(file, 'eng', { logger: m => console.log(m) })
-//       .then(({ data: { text } }) => {
-//         const lines = text.split("\n").map(l => l.trim()).filter(Boolean);
-
-//         const elements = lines.map((line) => {
-//           if (line.toLowerCase().includes("enviar") || line.toLowerCase().includes("submit")) {
-//             return { type: "button", label: line };
-//           } else {
-//             return { type: "input", label: line };
-//           }
-//         });
-
-//         setFormFields(elements);
-//         generateHTMLCode(elements);
-//         setLoading(false);
-//       });
-//   };
-
-//   const generateHTMLCode = (fields) => {
-//     const code = `
-// <form>
-//   ${fields.map(field => {
-//     if (field.type === "input") {
-//       return `  <label>${field.label}</label>\n  <input type="text" name="${field.label}" />`;
-//     } else if (field.type === "button") {
-//       return `  <button type="submit">${field.label}</button>`;
-//     }
-//     return "";
-//   }).join("\n")}
-// </form>
-//     `.trim();
-
-//     setGeneratedCode(code);
-//   };
-
-//   const downloadCode = () => {
-//     const blob = new Blob([generatedCode], { type: "text/html" });
-//     const link = document.createElement("a");
-//     link.href = URL.createObjectURL(blob);
-//     link.download = "formulario-generado.html";
-//     document.body.appendChild(link);
-//     link.click();
-//     document.body.removeChild(link);
-//   };
-
-//   return (
-//     <div style={{ textAlign: "center" }}>
-//       <h3>Sube tu imagen dibujada</h3>
-//       <input type="file" accept="image/*" onChange={handleImageUpload} />
-//       {loading && <p>Procesando imagen...</p>}
-
-//       {imagePreview && (
-//         <>
-//           <h4>🖼️ Esto me pasaste:</h4>
-//           <img
-//             src={imagePreview}
-//             alt="Bosquejo"
-//             style={{ maxWidth: "400px", marginTop: "20px", border: "1px solid #ccc" }}
-//           />
-//         </>
-//       )}
-
-//       {formFields.length > 0 && (
-//         <div style={{ marginTop: "40px" }}>
-//           <h4>✨ Esto generé a partir de tu dibujo:</h4>
-//           <form style={{ textAlign: "left", display: "inline-block" }}>
-//             {formFields.map((field, idx) => (
-//               <div key={idx} style={{ marginBottom: "10px" }}>
-//                 {field.type === "input" && (
-//                   <>
-//                     <label>{field.label}</label>
-//                     <input type="text" placeholder={field.label} />
-//                   </>
-//                 )}
-//                 {field.type === "button" && (
-//                   <button type="submit">{field.label}</button>
-//                 )}
-//               </div>
-//             ))}
-//           </form>
-
-//           <div style={{ marginTop: "30px" }}>
-//             <h4>📄 Código HTML Generado</h4>
-//             <textarea
-//               style={{ width: "80%", height: "200px" }}
-//               readOnly
-//               value={generatedCode}
-//             ></textarea>
-//             <br />
-//             <button onClick={downloadCode} style={{ marginTop: "10px" }}>
-//               Descargar código
-//             </button>
-//           </div>
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
 import React, { useState } from "react";
-import Tesseract from "tesseract.js";
+import { GoogleGenAI } from "@google/genai";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
 
 const ImageToFormView = () => {
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [generatedHtml, setGeneratedHtml] = useState("");
   const navigate = useNavigate();
 
-  const handleImageUpload = (e) => {
+  const baseContext = `
+Considerando un diseño HTML como inspiración (no debe replicarse literalmente, sino adaptarse):
+HTML de referencia:
+- Un botón azul (#007bff).
+- Un campo de texto con placeholder "Ingrese Texto".
+- Una etiqueta con borde discontinuo.
+- Un contenedor con fondo azul claro (#90bdc6), bordes redondeados, y un checklist de 3 opciones.
+- Una tabla con columnas "Nombre", "Email", "Acciones".
+Usa estos elementos como ideas para crear una interfaz HTML similar pero optimizada (por ejemplo, usa flexbox o grid para responsividad, no posiciones absolutas).
+
+Instrucciones:
+- Analiza la imagen proporcionada, que representa una interfaz simple (puede ser dibujada a mano o generada por computadora) con elementos como botones, campos de texto, grids, listas, o tablas.
+- Genera un código HTML completo (con DOCTYPE, head, y estilos CSS) que represente la interfaz detectada.
+- Asegúrate de que el HTML sea funcional, responsivo, y estilizado de forma moderna (usa flexbox o grid, colores similares al HTML de referencia si es posible).
+- Incluye estilos en un <style> dentro de <head>.
+- Devuelve SOLO el código HTML como un string, sin explicaciones ni backticks.
+`;
+
+  const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    const preview = URL.createObjectURL(file);
     setLoading(true);
+    setError(null);
 
-    Tesseract.recognize(file, 'eng', { logger: m => console.log(m) })
-      .then(({ data: { text } }) => {
-        const lines = text.split("\n").map(l => l.trim()).filter(Boolean);
+    try {
+      const supportedMimeTypes = ["image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"];
+      if (!supportedMimeTypes.includes(file.type)) {
+        return;
+      }
 
-        const elements = lines.map((line) => {
-          const lower = line.toLowerCase();
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
 
-          // ✔️ Tabla
-          if (lower.includes("tabla")) {
-            return { type: "table", label: line };
-          }
+      reader.onload = async () => {
+        const result = reader.result;
 
-          // ✔️ Botones
-          const isButton = ["enviar", "submit", "registrar", "aceptar", "guardar", "buscar", "cancelar"]
-            .some(word => lower.includes(word));
-          if (isButton) {
-            return { type: "button", label: line };
-          }
+        if (!result || typeof result !== "string" || !result.includes(",")) {
+          throw new Error("No se pudo leer correctamente la imagen.");
+        }
 
-          // ✔️ Checkbox-list con símbolos como ☐, [ ], ( )
-          const checkboxSymbols = ["☐", "[ ]", "( )"];
-          const hasCheckboxSymbol = checkboxSymbols.some(sym => line.includes(sym));
+        const base64Parts = result.split(",");
+        const imageBase64 = base64Parts[1]?.trim();
+        const mimeType = file.type;
 
-          if (hasCheckboxSymbol && line.includes(":")) {
-            const [labelRaw, rest] = line.split(":");
-            const regex = /(?:☐|\[\s*\]|\(\s*\))\s*([\wáéíóúÁÉÍÓÚüÜñÑ]+)/g;
-            const options = [];
-            let match;
+        if (!imageBase64) {
+          throw new Error("Imagen vacía o mal codificada en base64.");
+        }
 
-            while ((match = regex.exec(rest)) !== null) {
-              options.push(match[1]);
-            }
+        const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+        if (!apiKey) {
+          throw new Error("Google API Key no configurada");
+        }
 
-            if (options.length >= 2) {
-              return {
-                type: "checkbox-list",
-                label: labelRaw.trim(),
-                options
-              };
-            }
-          }
+        const ai = new GoogleGenAI({ apiKey });
 
-          // ✔️ NUEVO: detectar sintaxis Palabra: opcion1, opcion2, ...
-          if (line.includes(":")) {
-            const [label, optionsRaw] = line.split(":");
-            const options = optionsRaw
-              .split(",")
-              .map(o => o.trim())
-              .filter(Boolean);
+        const payload = {
+          contents: [
+            {
+              parts: [
+                { text: baseContext },
+                {
+                  inlineData: {
+                    mimeType: mimeType,
+                    data: imageBase64,
+                  },
+                },
+              ],
+            },
+          ],
+          generationConfig: {
+            temperature: 0.4,
+            topK: 32,
+            topP: 1,
+            maxOutputTokens: 2048,
+            stopSequences: [],
+          },
+          safetySettings: [
+            { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+            { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+            { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+            { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+          ],
+        };
 
-            if (options.length >= 2) {
-              return {
-                type: "checkbox-list",
-                label: label.trim(),
-                options
-              };
-            }
-          }
-
-          // ✔️ Por defecto: input
-          return { type: "input", label: line };
+        const response = await ai.models.generateContent({
+          model: "gemini-1.5-flash-latest",
+          contents: payload.contents,
+          generationConfig: payload.generationConfig,
+          safetySettings: payload.safetySettings,
         });
 
-        const code = `
-        <!DOCTYPE html>
-        <html lang="es">
-        <head>
-          <meta charset="UTF-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <title>Formulario Generado</title>
-          <style>
-            body {
-              font-family: Arial, sans-serif;
-              background-color: #f8f9fa;
-              margin: 0;
-              padding: 0;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              height: 100vh;
-            }
+        const html = response.text?.trim();
+        if (!html) {
+          throw new Error("No se pudo obtener HTML de Gemini.");
+        }
 
-            .form-wrapper {
-              background: white;
-              padding: 40px;
-              border-radius: 12px;
-              box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-              width: 100%;
-              max-width: 600px;
-            }
+        setGeneratedHtml(html);
+        localStorage.setItem("htmlGenerado", html); // 💾 Guarda en localStorage
+      };
 
-            form {
-              display: flex;
-              flex-direction: column;
-              gap: 16px;
-            }
-
-            label {
-              font-weight: bold;
-              margin-bottom: 6px;
-            }
-
-            input, button, table {
-              font-size: 16px;
-              padding: 10px;
-              border-radius: 6px;
-              border: 1px solid #ccc;
-            }
-
-            button {
-              background-color: #007bff;
-              color: white;
-              border: none;
-              cursor: pointer;
-            }
-
-            table {
-              border-collapse: collapse;
-              width: 100%;
-            }
-
-            th, td {
-              border: 1px solid #999;
-              padding: 8px;
-              text-align: center;
-            }
-
-            th {
-              background-color: #f0f0f0;
-            }
-          </style>
-        </head>
-        <body>
-          <div class="form-wrapper">
-            <form>
-              ${elements.map(field => {
-                if (field.type === "input") {
-                  return `<label>${field.label}</label><input type="text" name="${field.label}" />`;
-                } else if (field.type === "email") {
-                  return `<label>${field.label}</label><input type="email" name="${field.label}" />`;
-                } else if (field.type === "password") {
-                  return `<label>${field.label}</label><input type="password" name="${field.label}" />`;
-                } else if (field.type === "tel") {
-                  return `<label>${field.label}</label><input type="tel" name="${field.label}" />`;
-                } else if (field.type === "button") {
-                  return `<button type="submit">${field.label}</button>`;
-                } else if (field.type === "table") {
-                  return (
-                    '<table>\n' +
-                    '  <thead><tr><th>Columna 1</th><th>Columna 2</th><th>Columna 3</th></tr></thead>\n' +
-                    '  <tbody>\n' +
-                    '    <tr><td>Dato 1</td><td>Dato 2</td><td>Dato 3</td></tr>\n' +
-                    '    <tr><td>Dato 4</td><td>Dato 5</td><td>Dato 6</td></tr>\n' +
-                    '    <tr><td>Dato 7</td><td>Dato 8</td><td>Dato 9</td></tr>\n' +
-                    '  </tbody>\n' +
-                    '</table>'
-                  );
-                } else if (field.type === "checkbox-list") {
-                  return `<label>${field.label}</label>\n` +
-                    field.options.map(option =>
-                      `<label style="display:block;"><input type="checkbox" /> ${option}</label>`
-                    ).join("\n");
-                }
-                return "";
-              }).join("\n")}
-            </form>
-          </div>
-        </body>
-        </html>
-        `.trim();
-
-        navigate("/vista-generada", {
-          state: {
-            formFields: elements,
-            generatedCode: code,
-            imagePreview: preview
-          }
-        });
-
-        setLoading(false);
-      });
+      reader.onerror = (e) => {
+        console.error("Error leyendo el archivo:", e);
+        setError("Error al leer la imagen.");
+      };
+    } catch (err) {
+      setError(`Error: ${err.message}`);
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <>
       <Navbar />
-      <div style={{ textAlign: "center" }}>
-        <h3>Sube tu imagen dibujada</h3>
-        <input type="file" accept="image/*" onChange={handleImageUpload} />
+      <div style={{ textAlign: "center", padding: "20px" }}>
+        <h3>Sube tu imagen dibujada de una interfaz</h3>
+        <input
+          type="file"
+          accept="image/png,image/jpeg,image/webp,image/heic,image/heif"
+          onChange={handleImageUpload}
+          disabled={loading}
+        />
         {loading && <p>Procesando imagen...</p>}
+        {error && <p style={{ color: "red" }}>{error}</p>}
+
+        {generatedHtml && (
+          <div style={{ marginTop: "30px", textAlign: "left", padding: "10px" }}>
+            <h4>📄 Código HTML Generado</h4>
+            <textarea
+              value={generatedHtml}
+              readOnly
+              rows={25}
+              style={{
+                width: "100%",
+                fontFamily: "monospace",
+                fontSize: "14px",
+                backgroundColor: "#f5f5f5",
+                padding: "10px",
+              }}
+            />
+
+
+          <button
+            style={{
+              marginTop: "16px",
+              padding: "10px 24px",
+              backgroundColor: "#007bff",
+              color: "#fff",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+              fontWeight: "bold",
+              fontSize: "16px"
+            }}
+            onClick={() => navigate("/generar-componentes")}
+          >
+            Generar Componentes a lienzo
+          </button>
+
+
+
+          <button
+            style={{
+              marginTop: "16px",
+              padding: "10px 24px",
+              backgroundColor: "#007bff",
+              color: "#fff",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+              fontWeight: "bold",
+              fontSize: "16px"
+            }}
+            onClick={() => navigate("/generar-flutter-boceto")}
+          >
+            Generar Flutter
+          </button>
+
+
+          </div>
+        )}
       </div>
     </>
   );

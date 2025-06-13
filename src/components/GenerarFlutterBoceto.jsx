@@ -140,28 +140,32 @@ class _MyHomePageState extends State<MyHomePage> {
   }, []);
 
   async function mejorarCodigo() {
-    setLoading(true);
-    const prompt = `mejora este código y soluciona errores para que funcione mejor en Flutter, organizalo de forma que todo se vea y no se tapen los compoenntes entre si:\n\n${flutterCode}`;
+  setLoading(true);
+  // Tomar el HTML guardado del localStorage
+  const htmlGuardado = localStorage.getItem("htmlGenerado") || "";
+  // El prompt ahora usa el HTML guardado
+  const prompt = `mejora este código y soluciona errores para que funcione mejor en Flutter, organizalo de forma que todo se vea y no se tapen los compoenntes entre si, no coloques el cdoigo del contador por defecto que flutter:\n\n${htmlGuardado}`;
 
-    try {
-      const result = await ai.models.generateContent({
-        model: 'gemini-2.0-flash',
-        contents: prompt,
-      });
-      const raw = result.text || '';
-      const match = raw.match(/```(?:dart)?\s*([\s\S]*?)```/);
-      if (match && match[1]) {
-        setMejorado(match[1].trim());
-      } else {
-        setMejorado(raw);
-      }
-    } catch (err) {
-      console.error('Error llamando a Gemini:', err);
-      setMejorado('Error al llamar a la API de Gemini.');
-    } finally {
-      setLoading(false);
+  try {
+    const result = await ai.models.generateContent({
+      model: 'gemini-2.0-flash',
+      contents: prompt,
+    });
+    const raw = result.text || '';
+    const match = raw.match(/```(?:dart)?\s*([\s\S]*?)```/);
+    if (match && match[1]) {
+      setMejorado(match[1].trim());
+    } else {
+      setMejorado(raw);
     }
+  } catch (err) {
+    console.error('Error llamando a Gemini:', err);
+    setMejorado('Error al llamar a la API de Gemini.');
+  } finally {
+    setLoading(false);
   }
+}
+
 
   async function handleDescargarZip() {
     if (!mejorado || mejorado.includes('Error')) {
